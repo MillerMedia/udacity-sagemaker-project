@@ -11,17 +11,21 @@
         <script>
          "use strict";
          function submitForm(oFormElement) {
+             document.getElementById('loader').style.display = 'block';
+             document.getElementById('result').style.display = 'none';
              var xhr = new XMLHttpRequest();
              xhr.onload = function() {
                  var result = parseFloat(xhr.responseText);
                  var resultElement = document.getElementById('result');
                  if (result == 0) {
-                     resultElement.className = 'bg-danger';
+                     resultElement.className = 'bg-danger col-xs-5 text-center';
                      resultElement.innerHTML = 'Your review was NEGATIVE!';
                  } else {
-                     resultElement.className = 'bg-success';
+                     resultElement.className = 'bg-success col-xs-5 text-center';
                      resultElement.innerHTML = 'Your review was POSITIVE!';
                  }
+                 document.getElementById('result').style.display = 'block';
+                 document.getElementById('loader').style.display = 'none';
              }
              xhr.open (oFormElement.method, oFormElement.action, true);
              var review = document.getElementById('review');
@@ -29,23 +33,90 @@
              return false;
          }
         </script>
+        <style>
+        #result {
+            padding-top:10px;
+            padding-bottom:10px;
+        }
+        .blue-border .form-control:focus {
+            border: 1px solid #337ab7;
+        }
+        .lds-ellipsis {
+          display: inline-block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+          display:none;
+        }
+        .lds-ellipsis div {
+          position: absolute;
+          top: 33px;
+          width: 13px;
+          height: 13px;
+          border-radius: 50%;
+          background: black;
+          animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+          left: 8px;
+          animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+          left: 8px;
+          animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+          left: 32px;
+          animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+          left: 56px;
+          animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+          0% {
+            transform: scale(0);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        @keyframes lds-ellipsis3 {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(0);
+          }
+        }
+        @keyframes lds-ellipsis2 {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(24px, 0);
+          }
+        }
+
+        </style>
 
     </head>
     <body>
-
-        <div class="container">
-            <h1>Is your review positive, or negative?</h1>
-            <p>Enter your review below and click submit to find out...</p>
+        <div class="container">            
+            <h1 class="text-center">Is your review positive, or negative?</h1>
+            <hr />
+            <p>Enter your review below and click submit to find out if it is positive or negative!</p>
             <form method="POST"
                   action="https://03sbnndbni.execute-api.us-west-1.amazonaws.com/prod"
                   onsubmit="return submitForm(this);" >                     <!-- HERE IS WHERE YOU NEED TO ENTER THE API URL -->
-                <div class="form-group">
+                <div class="form-group blue-border">
                     <label for="review">Review:</label>
-                    <textarea class="form-control"  rows="5" id="review">Please write your review here.</textarea>
+                    <textarea class="form-control"  rows="5" id="review" placeholder="Please write your review here."></textarea>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-lg btn-primary">Submit</button>
             </form>
-            <h1 class="bg-success" id="result"></h1>
+            <div class="lds-ellipsis" id="loader"><div></div><div></div><div></div><div></div></div>
+            <h2 class="bg-success col-xs-5 text-center" id="result" style="display:none;"></h2>
         </div>
     </body>
 </html>
